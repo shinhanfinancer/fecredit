@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FE Credit - Xem Kết Quả Xét Duyệt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://fecredit.com.vn/public/themes/fecredit/img/favicon.ico">
+    <style>
+        :root {
+            --fecredit-red: #E82629;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .bg-fecredit-red { background-color: var(--fecredit-red); }
+        .text-fecredit-red { color: var(--fecredit-red); }
+        .border-fecredit-red { border-color: var(--fecredit-red); }
+        .hover\:bg-fecredit-red-dark:hover { background-color: #C41E22; }
+        .details-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
+        .details-content.show { max-height: 1000px; /* Adjust as needed */ }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <img src="https://fecredit.com.vn/public/themes/fecredit/img/fecredit-logo.png" alt="FE Credit Logo" class="h-8">
+                </div>
+                <div class="hidden md:block">
+                    <nav class="flex items-center space-x-2">
+                        <a href="#" class="text-gray-600 hover:text-fecredit-red px-3 py-2 rounded-md text-sm font-medium">Trang Chủ</a>
+                        <a href="#" class="text-gray-600 hover:text-fecredit-red px-3 py-2 rounded-md text-sm font-medium">Sản Phẩm Vay</a>
+                        <a href="#" class="text-gray-600 hover:text-fecredit-red px-3 py-2 rounded-md text-sm font-medium">Hỗ Trợ</a>
+                    </nav>
+                </div>
+                 <div class="md:hidden">
+                    <button id="hamburger-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none" aria-expanded="false">
+                        <span class="sr-only">Mở menu chính</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <nav id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                 <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-fecredit-red block px-3 py-2 rounded-md text-base font-medium">Trang Chủ</a>
+                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-fecredit-red block px-3 py-2 rounded-md text-base font-medium">Sản Phẩm Vay</a>
+                <a href="#" class="text-gray-600 hover:bg-gray-50 hover:text-fecredit-red block px-3 py-2 rounded-md text-base font-medium">Hỗ Trợ</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+            <div class="text-center">
+                <h1 class="text-2xl font-bold text-fecredit-red">TRA CỨU KẾT QUẢ HỒ SƠ</h1>
+                <p class="text-slate-500 mt-1">Nhập số CCCD của bạn để xem trạng thái hồ sơ vay.</p>
+            </div>
+            
+            <div class="mt-8 max-w-md mx-auto">
+                <form id="check-result-form" onsubmit="event.preventDefault(); checkResult();">
+                    <div>
+                        <label for="cccd" class="block text-sm font-medium text-gray-700">Số Căn cước công dân</label>
+                        <input type="text" id="cccd" inputmode="numeric" placeholder="Nhập 12 số CCCD" maxlength="12" class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-fecredit-red focus:border-fecredit-red">
+                        <p id="cccdError" class="hidden mt-2 text-xs text-red-500">Số CCCD không hợp lệ. Vui lòng kiểm tra lại.</p>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-fecredit-red hover:bg-fecredit-red-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fecredit-red">
+                            Kiểm tra kết quả
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="result-container" class="hidden mt-8">
+            <!-- Results will be injected here -->
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs">
+             <p class="flex flex-wrap justify-center gap-x-4 gap-y-2">
+                <a href="#" class="hover:underline">Chính sách bảo mật</a>
+                <a href="#" class="hover:underline">Điều khoản sử dụng</a>
+                <a href="#" class="hover:underline">Chính sách Cookies</a>
+                <a href="#" class="hover:underline">Sitemap</a>
+            </p>
+             <div class="mt-4">
+                <button type="button" id="show-all-data-btn" class="text-slate-500 hover:text-white text-xs underline">Hiển thị Dữ liệu Local</button>
+             </div>
+            <p class="mt-4">© Copyright FE Credit 2016-2025</p>
+        </div>
+    </footer>
+    
+    <div id="loadingIndicator" class="hidden fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="w-16 h-16 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+    </div>
+
+    <!-- All Data Modal -->
+    <div id="all-data-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl transform transition-all sm:max-w-4xl w-full">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-lg font-semibold">Tất cả Hồ sơ đã lưu</h3>
+                <button onclick="closeAllDataModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+            <div id="all-data-content" class="p-6 max-h-[70vh] overflow-y-auto">
+                <!-- Data table will be injected here -->
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function setupMobileMenu() {
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(!hamburgerButton || !mobileMenu) return;
+            const icons = hamburgerButton.querySelectorAll('svg');
+            hamburgerButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                icons.forEach(icon => icon.classList.toggle('hidden'));
+            });
+        }
+        
+        function formatNumber(number) {
+            if (number === null || typeof number === 'undefined' || number === "N/A" || number === 0) return "Chưa cập nhật";
+            return Number(number).toLocaleString('vi-VN');
+        }
+
+        function downloadAsPDF(imageData, filename, width, height) {
+            const { jsPDF } = window.jspdf;
+            if (!jsPDF) {
+                alert("Không thể tải thư viện PDF. Vui lòng thử lại sau.");
+                return;
+            }
+            const pdf = new jsPDF({
+                orientation: width > height ? 'landscape' : 'portrait',
+                unit: 'px',
+                format: [width, height]
+            });
+            pdf.addImage(imageData, 'PNG', 0, 0, width, height);
+            pdf.save(filename);
+        }
+
+        function toggleDetails(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.toggle-icon');
+            content.classList.toggle('show');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function renderResult(hoSo) {
+            const resultContainer = document.getElementById('result-container');
+            
+            const statusClass = hoSo.trangThai === 'Đã duyệt' ? 'text-green-600 bg-green-100' : 'text-yellow-600 bg-yellow-100';
+            const statusText = hoSo.trangThai || 'Đang xử lý';
+
+            resultContainer.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="text-center border-b pb-4 mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Kết quả hồ sơ: <span class="text-fecredit-red">${hoSo.loanCode || 'N/A'}</span></h2>
+                        <p class="mt-2">Khách hàng: <strong class="text-gray-900">${hoSo.fullName || 'N/A'}</strong></p>
+                        <div class="mt-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusClass}">
+                            ${statusText}
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Loan Details Card -->
+                        <div class="border rounded-lg">
+                            <button class="w-full flex justify-between items-center p-4 text-left font-semibold" onclick="toggleDetails(this)">
+                                <span>Chi tiết Khoản vay</span>
+                                <svg class="toggle-icon w-5 h-5 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="details-content">
+                                <dl class="p-4 border-t text-sm space-y-2">
+                                    <div class="flex justify-between"><dt class="text-gray-500">Số tiền vay</dt><dd class="font-medium">${formatNumber(hoSo.loanAmount)} VND</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Thời hạn</dt><dd class="font-medium">${hoSo.loanTerm || 'N/A'} tháng</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Thanh toán hàng tháng</dt><dd class="font-medium">${formatNumber(hoSo.monthlyPayment)} VND</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Tổng lãi</dt><dd class="font-medium">${formatNumber(hoSo.totalInterest)} VND</dd></div>
+                                    <div class="flex justify-between"><dt class="text-gray-500">Tổng thanh toán</dt><dd class="font-medium">${formatNumber(hoSo.totalRepayment)} VND</dd></div>
+                                </dl>
+                            </div>
+                        </div>
+
+                        <!-- Documents Card -->
+                        <div class="border rounded-lg">
+                            <button class="w-full flex justify-between items-center p-4 text-left font-semibold" onclick="toggleDetails(this)">
+                                <span>Hồ sơ & Giấy tờ</span>
+                                <svg class="toggle-icon w-5 h-5 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <div class="details-content">
+                                <div class="p-4 border-t grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-center">
+                                    <div>
+                                        <p class="font-medium text-sm mb-2">Ảnh hồ sơ</p>
+                                        ${hoSo.anhHoSo ? `<img src="${hoSo.anhHoSo}" alt="Ảnh hồ sơ" class="w-full rounded-lg shadow-md aspect-square object-cover">` : '<p class="text-xs text-gray-500">Không có</p>'}
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm mb-2">Ảnh hợp đồng</p>
+                                        ${hoSo.anhHopDong ? `<img src="${hoSo.anhHopDong}" alt="Ảnh hợp đồng" class="w-full rounded-lg shadow-md aspect-square object-cover mb-2"><button class="w-full text-xs bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-2 rounded" onclick="downloadAsPDF('${hoSo.anhHopDong}', 'HopDongVay_${hoSo.loanCode || 'unknown'}.pdf', 2480, 3508)">Tải xuống</button>` : '<p class="text-xs text-gray-500">Không có</p>'}
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-sm mb-2">Ảnh giải ngân</p>
+                                        ${hoSo.anhGiaiNgan ? `<img src="${hoSo.anhGiaiNgan}" alt="Ảnh giải ngân" class="w-full rounded-lg shadow-md aspect-square object-cover mb-2"><button class="w-full text-xs bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1 px-2 rounded" onclick="downloadAsPDF('${hoSo.anhGiaiNgan}', 'DieuKienGiaiNgan_${hoSo.loanCode || 'unknown'}.pdf', 1240, 1754)">Tải xuống</button>` : '<p class="text-xs text-gray-500">Không có</p>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            resultContainer.classList.remove('hidden');
+        }
+
+        function renderError(message) {
+            const resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <svg class="mx-auto h-12 w-12 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="mt-2 text-lg font-medium text-gray-900">Không tìm thấy hồ sơ</h3>
+                    <p class="mt-1 text-sm text-gray-500">${message}</p>
+                </div>
+            `;
+            resultContainer.classList.remove('hidden');
+        }
+
+        function checkResult() {
+            const cccdInput = document.getElementById('cccd');
+            const cccd = cccdInput.value.trim();
+            const cccdError = document.getElementById('cccdError');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            cccdError.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+
+            setTimeout(() => {
+                if (!cccd || !/^\d{12}$/.test(cccd)) {
+                    cccdError.classList.remove('hidden');
+                    loadingIndicator.classList.add('hidden');
+                    return;
+                }
+
+                try {
+                    const storedData = localStorage.getItem('hoSoKhachHang');
+                    let hoSoKhachHang = [];
+                    if (storedData) {
+                        const decryptedBytes = CryptoJS.AES.decrypt(storedData, 'fecredit-secret-key');
+                        hoSoKhachHang = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+                    }
+
+                    const hoSo = hoSoKhachHang.find(item => item.cccd === cccd);
+                    
+                    if (hoSo) {
+                        renderResult(hoSo);
+                    } else {
+                        renderError("Quý khách chưa có hồ sơ đăng ký tại hệ thống hoặc số CCCD không đúng.");
+                    }
+                } catch (error) {
+                    console.error('Error processing stored data:', error);
+                    renderError("Lỗi truy xuất dữ liệu. Vui lòng thử lại sau.");
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            }, 500);
+        }
+
+        function showAllLocalData() {
+            const modal = document.getElementById('all-data-modal');
+            const contentDiv = document.getElementById('all-data-content');
+            
+            try {
+                const storedData = localStorage.getItem('hoSoKhachHang');
+                if (!storedData) {
+                    contentDiv.innerHTML = '<p class="text-center text-gray-500">Không có dữ liệu nào được lưu trữ.</p>';
+                    modal.classList.remove('hidden');
+                    return;
+                }
+
+                const decryptedBytes = CryptoJS.AES.decrypt(storedData, 'fecredit-secret-key');
+                const hoSoKhachHang = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+
+                if (!hoSoKhachHang || hoSoKhachHang.length === 0) {
+                    contentDiv.innerHTML = '<p class="text-center text-gray-500">Không có dữ liệu nào được lưu trữ.</p>';
+                } else {
+                    let tableHTML = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Mã hồ sơ</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Họ và Tên</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">CCCD</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">`;
+                    
+                    hoSoKhachHang.forEach(hoSo => {
+                        tableHTML += `
+                            <tr>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.loanCode || 'N/A'}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.fullName || 'N/A'}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.cccd || 'N/A'}</td>
+                                <td class="px-4 py-2 whitespace-nowrap text-sm">${hoSo.trangThai || 'Đang xử lý'}</td>
+                            </tr>`;
+                    });
+
+                    tableHTML += `</tbody></table></div>`;
+                    contentDiv.innerHTML = tableHTML;
+                }
+
+            } catch (error) {
+                console.error("Lỗi khi đọc hoặc giải mã dữ liệu:", error);
+                contentDiv.innerHTML = '<p class="text-center text-red-500">Lỗi: Không thể đọc dữ liệu từ bộ nhớ cục bộ. Dữ liệu có thể đã bị hỏng.</p>';
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeAllDataModal() {
+            document.getElementById('all-data-modal').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            setupMobileMenu();
+            document.getElementById('show-all-data-btn').addEventListener('click', showAllLocalData);
+        };
+    </script>
+</body>
+</html>

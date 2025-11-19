@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>FE Credit - Xét Duyệt Hồ Sơ</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="https://fecredit.com.vn/favicon.ico" />
+
+    <!-- FECredit Design System -->
+    <link
+      rel="stylesheet"
+      href="../../configs/shared/fecredit-design-system.css"
+    />
+    <link rel="stylesheet" href="../../configs/shared/fecredit-components.css" />
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <script src="../../simple-navigation.js"></script>
+    <style>
+      :root {
+        --primary-color: #00468e;
+        --secondary-color: #00a859;
+        --background-color: #f8f9fc;
+        --card-background: #ffffff;
+        --text-primary: #212529;
+        --text-secondary: #5a6a85;
+        --border-color: #eaebee;
+        --border-radius: 12px;
+        --border-radius-sm: 8px;
+        --shadow-sm: 0 4px 15px rgba(0, 70, 142, 0.07);
+        --shadow-lg: 0 10px 30px rgba(0, 70, 142, 0.1);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --spacing-xs: 8px;
+        --spacing-sm: 12px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
+        --touch-target: 48px;
+        --warning-color: #ff9800;
+        --error-color: #dc3545;
+        --info-color: #17a2b8;
+      }
+
+      /* Progress Stepper */
+      .progress-stepper-wrapper {
+        background: var(--card-background);
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: var(--spacing-md) var(--spacing-sm);
+        margin-bottom: var(--spacing-lg);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .progress-stepper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 600px;
+        margin: 0 auto;
+        max-width: 900px;
+      }
+
+      .stepper-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-xs);
+        min-width: 60px;
+      }
+
+      .stepper-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--border-color);
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.875rem;
+        transition: var(--transition);
+      }
+
+      .stepper-step.completed .stepper-circle {
+        background: var(--secondary-color);
+        color: white;
+      }
+
+      .stepper-step.active .stepper-circle {
+        background: var(--primary-color);
+        color: white;
+        box-shadow: 0 0 0 4px rgba(0, 70, 142, 0.2);
+      }
+
+      .stepper-label {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      .stepper-step.completed .stepper-label,
+      .stepper-step.active .stepper-label {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .stepper-line {
+        height: 2px;
+        flex: 1;
+        background: var(--border-color);
+        min-width: 30px;
+        transition: var(--transition);
+      }
+
+      .stepper-line.completed {
+        background: var(--secondary-color);
+      }
+
+      .stepper-line.active {
+        background: linear-gradient(90deg, var(--secondary-color) 0%, var(--border-color) 100%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+        body {
+          font-family: "Inter", sans-serif;
+          background-color: var(--background-color);
+          color: var(--text-primary);
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          margin: 0;
+          min-height: 100dvh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          padding: 0;
+          gap: 0;
+        }
+
+        .main-layout {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: clamp(16px, 4vw, 32px);
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: var(--spacing-lg);
+        }
+
+        @media (min-width: 992px) {
+          .main-layout {
+            grid-template-columns: 2fr 1fr;
+          }
+        }
+
+        .approval-container {
+          width: 100%;
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          box-shadow: var(--shadow-lg);
+          padding: clamp(20px, 4vw, 32px);
+          text-align: center;
+          position: relative;
+          overflow: visible;
+          display: flex;
+          flex-direction: column;
+          gap: clamp(16px, 3vw, 24px);
+          animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .summary-panel {
+          width: 100%;
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          box-shadow: var(--shadow-lg);
+          padding: clamp(20px, 4vw, 24px);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          gap: var(--spacing-md);
+          animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+          align-self: flex-start;
+          order: 2;
+        }
+
+        @media (min-width: 992px) {
+          .summary-panel {
+            position: sticky;
+            top: 100px;
+            order: 0;
+          }
+        }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        53%,
+        80%,
+        100% {
+          transform: translate3d(0, 0, 0);
+        }
+        40%,
+        43% {
+          transform: translate3d(0, -10px, 0);
+        }
+        70% {
+          transform: translate3d(0, -5px, 0);
+        }
+        90% {
+          transform: translate3d(0, -2px, 0);
+        }
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -200px 0;
+        }
+        100% {
+          background-position: calc(200px + 100%) 0;
+        }
+      }
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .approval-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+      }
+
+        .progress-circle {
+          width: clamp(140px, 42vw, 200px);
+          height: clamp(140px, 42vw, 200px);
+          position: relative;
+          margin: 0 auto;
+          animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+        }
+
+      .progress-svg {
+        transform: rotate(-90deg);
+        filter: drop-shadow(0 4px 8px rgba(0, 70, 142, 0.2));
+      }
+
+      .progress-bg {
+        fill: none;
+        stroke: var(--border-color);
+        stroke-width: 10;
+      }
+
+      .progress-fill {
+        fill: none;
+        stroke: var(--primary-color);
+        stroke-width: 10;
+        stroke-linecap: round;
+        stroke-dasharray: 565.48;
+        stroke-dashoffset: 565.48;
+        transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 2px 4px rgba(0, 70, 142, 0.3));
+        animation: pulse 2s infinite;
+      }
+
+      .progress-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .progress-icon {
+        font-size: 2.5rem;
+        color: var(--text-secondary);
+        animation: pulse 2s infinite;
+        margin-bottom: 10px;
+      }
+
+      .progress-text {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        animation: bounce 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
+      }
+
+      .status-display h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+        animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.7s both;
+      }
+
+      .status-display p {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        font-style: italic;
+        animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.9s both;
+      }
+
+        .step-items {
+          display: flex;
+          flex-direction: column;
+          gap: var(--spacing-md);
+          margin-top: 10px;
+          animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
+        }
+
+        .step-item {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-md);
+          padding: var(--spacing-md) var(--spacing-md);
+          background: var(--background-color);
+          border-radius: var(--border-radius);
+          border: 1px solid var(--border-color);
+          transition: var(--transition);
+          position: relative;
+          overflow: hidden;
+          animation: fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+          min-height: var(--touch-target);
+        }
+
+        .step-item-content {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-md);
+          flex: 1;
+        }
+
+        .step-item-info {
+          flex: 1;
+          text-align: left;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .step-item-actions {
+          display: flex;
+          gap: var(--spacing-sm);
+          align-items: center;
+        }
+
+        .step-btn {
+          padding: var(--spacing-xs) var(--spacing-md);
+          border-radius: var(--border-radius-sm);
+          border: 1px solid var(--primary-color);
+          background: white;
+          color: var(--primary-color);
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: var(--transition);
+          min-height: 36px;
+          white-space: nowrap;
+        }
+
+        .step-btn:hover {
+          background: var(--primary-color);
+          color: white;
+        }
+
+        .step-timestamp {
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+          font-style: italic;
+        }
+
+      .step-item:nth-child(1) {
+        animation-delay: 0.8s;
+      }
+      .step-item:nth-child(2) {
+        animation-delay: 1s;
+      }
+      .step-item:nth-child(3) {
+        animation-delay: 1.2s;
+      }
+      .step-item:nth-child(4) {
+        animation-delay: 1.4s;
+      }
+
+      .step-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 70, 142, 0.1),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+
+      .step-item.active {
+        box-shadow: var(--shadow-sm);
+        border-color: var(--primary-color);
+        background: rgba(0, 70, 142, 0.02);
+      }
+
+      .step-item.active::before {
+        left: 100%;
+      }
+
+      .step-item.completed {
+        background-color: #e6f8e8;
+        border-color: var(--secondary-color);
+        animation: completedPulse 0.6s ease-out;
+      }
+
+        .step-icon-item {
+          width: 42px;
+          height: 42px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--border-color);
+          color: var(--text-secondary);
+          border-radius: 50%;
+          transition: var(--transition);
+          position: relative;
+          z-index: 2;
+          flex-shrink: 0;
+        }
+
+      .step-item.active .step-icon-item {
+        background: var(--primary-color);
+        color: white;
+        animation: iconPulse 1s infinite;
+      }
+
+      .step-item.completed .step-icon-item {
+        background: var(--secondary-color);
+        color: white;
+      }
+
+      .step-item.completed .step-icon-item::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      .step-text {
+        text-align: left;
+        flex: 1;
+        position: relative;
+        z-index: 2;
+        animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+      }
+
+      .step-item:nth-child(1) .step-text {
+        animation-delay: 1.2s;
+      }
+      .step-item:nth-child(2) .step-text {
+        animation-delay: 1.4s;
+      }
+      .step-item:nth-child(3) .step-text {
+        animation-delay: 1.6s;
+      }
+      .step-item:nth-child(4) .step-text {
+        animation-delay: 1.8s;
+      }
+
+      .step-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .step-status {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+        .result-display {
+          background: var(--card-background);
+          border-radius: var(--border-radius);
+          box-shadow: var(--shadow-lg);
+          padding: clamp(24px, 5vw, 40px);
+          margin-top: 10px;
+          text-align: center;
+          animation: fadeIn 0.8s ease-out;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+      .result-display::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--secondary-color), #28c76f);
+      }
+
+      .result-icon-display {
+        font-size: 3rem;
+        color: var(--secondary-color);
+        margin-bottom: 20px;
+        animation: successBounce 1s ease-out;
+      }
+
+      .result-display h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin-bottom: 15px;
+      }
+
+      .result-display p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 30px;
+      }
+
+        .result-details {
+          background: var(--background-color);
+          border-radius: var(--border-radius);
+          padding: 20px;
+          margin-bottom: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 0;
+        border-bottom: 1px solid var(--border-color);
+        transition: var(--transition);
+          flex-wrap: wrap;
+      }
+
+      .detail-item:last-child {
+        border-bottom: none;
+      }
+
+      .detail-item:hover {
+        background: rgba(0, 70, 142, 0.02);
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin: 0 -15px;
+      }
+
+      .detail-label {
+        font-weight: 500;
+        color: var(--text-secondary);
+          text-align: left;
+      }
+
+      .detail-value {
+        font-weight: 600;
+        color: var(--primary-color);
+          text-align: right;
+          flex: 1;
+          min-width: 140px;
+          word-break: break-word;
+      }
+
+      .continue-button {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 14px 32px;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        max-width: 320px;
+        min-height: var(--touch-target);
+        font-size: 1rem;
+        animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.8s both;
+        cursor: pointer;
+      }
+
+      .continue-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+
+      .continue-button:hover::before {
+        left: 100%;
+      }
+
+      .continue-button:hover {
+        background-color: #008a48;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 168, 89, 0.3);
+      }
+
+      .continue-button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Skeleton Loader */
+      .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: var(--border-radius-sm);
+      }
+
+      .skeleton-circle {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+      }
+
+      .skeleton-text {
+        height: 16px;
+        width: 100%;
+        margin: 8px 0;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      /* Confirmation Modal */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
+      .modal-content {
+        background: var(--card-background);
+        border-radius: var(--border-radius);
+        padding: var(--spacing-xl);
+        max-width: 500px;
+        width: 90%;
+        box-shadow: var(--shadow-lg);
+        animation: slideInUp 0.3s ease;
+      }
+
+      .modal-header {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: var(--spacing-md);
+        color: var(--text-primary);
+      }
+
+      .modal-body {
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .modal-body textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        font-family: inherit;
+        resize: vertical;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        justify-content: flex-end;
+      }
+
+      .modal-btn {
+        padding: 12px 24px;
+        border-radius: var(--border-radius-sm);
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        min-height: var(--touch-target);
+        min-width: 100px;
+      }
+
+      .modal-btn-primary {
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .modal-btn-primary:hover {
+        background: var(--primary-hover-color, #003a75);
+      }
+
+      .modal-btn-secondary {
+        background: var(--border-color);
+        color: var(--text-primary);
+      }
+
+      .modal-btn-secondary:hover {
+        background: #d0d5dd;
+      }
+
+      /* Form Validation */
+      .form-validation-summary {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: var(--border-radius-sm);
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+        color: #856404;
+      }
+
+      .form-validation-summary.collapsible {
+        cursor: pointer;
+      }
+
+      .form-validation-summary h4 {
+        margin: 0 0 var(--spacing-sm) 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .form-validation-summary ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .invalid-feedback {
+        color: var(--error-color);
+        font-size: 0.875rem;
+        margin-top: 4px;
+        display: none;
+      }
+
+      .invalid-feedback.show {
+        display: block;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .fade-out {
+        animation: fadeOutDown 0.5s forwards;
+      }
+
+      .fade-in {
+        animation: fadeInUp 0.5s forwards;
+      }
+
+      @keyframes fadeOutDown {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      @keyframes iconPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(0, 70, 142, 0.4);
+        }
+        50% {
+          transform: scale(1.1);
+          box-shadow: 0 0 0 10px rgba(0, 70, 142, 0);
+        }
+      }
+
+      @keyframes completedPulse {
+        0% {
+          transform: scale(1);
+          background-color: #e6f8e8;
+        }
+        50% {
+          transform: scale(1.02);
+          background-color: #d4f4d8;
+        }
+        100% {
+          transform: scale(1);
+          background-color: #e6f8e8;
+        }
+      }
+
+      @keyframes successBounce {
+        0% {
+          transform: scale(0.3);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive Design */
+        @media (max-width: 768px) {
+          .progress-stepper-wrapper {
+            padding: var(--spacing-sm);
+          }
+
+          .progress-stepper {
+            justify-content: flex-start;
+            min-width: 500px;
+          }
+
+          .stepper-label {
+            font-size: 0.625rem;
+          }
+
+          .stepper-circle {
+            width: 36px;
+            height: 36px;
+            font-size: 0.75rem;
+          }
+
+          body {
+            padding: 0;
+          }
+
+          .main-layout {
+            padding: var(--spacing-md);
+          }
+
+          .approval-container {
+            padding: var(--spacing-md);
+            margin: 0;
+            gap: var(--spacing-md);
+          }
+
+          .summary-panel {
+            padding: var(--spacing-md);
+          }
+
+          .progress-circle {
+            width: min(160px, 55vw);
+            height: min(160px, 55vw);
+          }
+
+          .progress-icon {
+            font-size: 1.9rem;
+          }
+
+          .progress-text {
+            font-size: 1.6rem;
+          }
+
+          .status-display h2 {
+            font-size: 1.3rem;
+          }
+
+          .step-items {
+            gap: var(--spacing-sm);
+          }
+
+          .step-item {
+            padding: var(--spacing-sm);
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .step-item-content {
+            width: 100%;
+          }
+
+          .step-item-actions {
+            width: 100%;
+            justify-content: flex-end;
+          }
+
+          .step-btn {
+            flex: 1;
+            max-width: 120px;
+          }
+
+          .step-icon-item {
+            width: 36px;
+            height: 36px;
+          }
+
+          .result-display {
+            padding: var(--spacing-md);
+          }
+
+          .result-display h3 {
+            font-size: 1.6rem;
+          }
+
+          .modal-content {
+            width: 95%;
+            padding: var(--spacing-lg);
+          }
+
+          .modal-actions {
+            flex-direction: column;
+          }
+
+          .modal-btn {
+            width: 100%;
+          }
+        }
+
+        /* Summary Panel Styles */
+        .summary-panel::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+          border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .summary-header {
+          text-align: left;
+          margin-bottom: var(--spacing-md);
+        }
+
+        .summary-header h3 {
+          font-size: 1.125rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 0;
+        }
+
+        .summary-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: var(--spacing-sm) 0;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-item:last-child {
+          border-bottom: none;
+        }
+
+        .summary-label {
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+
+        .summary-value {
+          font-size: 0.875rem;
+          color: var(--text-primary);
+          font-weight: 600;
+          text-align: right;
+        }
+
+        .summary-value.highlight {
+          color: var(--primary-color);
+          font-size: 1rem;
+        }
+
+        .summary-code {
+          background: var(--background-color);
+          padding: var(--spacing-md);
+          border-radius: var(--border-radius-sm);
+          margin: var(--spacing-md) 0;
+          text-align: center;
+        }
+
+        .summary-code-label {
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+          margin-bottom: 4px;
+        }
+
+        .summary-code-value {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: var(--primary-color);
+          font-family: 'Courier New', monospace;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          body {
+            padding: 24px 16px;
+          }
+
+          .approval-container {
+            padding: 24px;
+            margin: 0;
+            gap: 20px;
+          }
+
+          .progress-circle {
+            width: min(160px, 55vw);
+            height: min(160px, 55vw);
+          }
+
+          .progress-icon {
+            font-size: 1.9rem;
+          }
+
+          .progress-text {
+            font-size: 1.6rem;
+          }
+
+          .status-display h2 {
+            font-size: 1.3rem;
+          }
+
+          .step-items {
+            gap: 14px;
+          }
+
+          .step-item {
+            padding: 14px 16px;
+          }
+
+          .step-icon-item {
+            width: 36px;
+            height: 36px;
+          }
+
+          .result-display {
+            padding: 24px;
+          }
+
+          .result-display h3 {
+            font-size: 1.6rem;
+          }
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Progress Stepper -->
+    <div class="progress-stepper-wrapper">
+      <div class="progress-stepper">
+        <div class="stepper-step completed">
+          <div class="stepper-circle">1</div>
+          <div class="stepper-label">Thông tin</div>
+        </div>
+        <div class="stepper-line completed"></div>
+        <div class="stepper-step completed">
+          <div class="stepper-circle">2</div>
+          <div class="stepper-label">eKYC</div>
+        </div>
+        <div class="stepper-line completed"></div>
+        <div class="stepper-step completed">
+          <div class="stepper-circle">3</div>
+          <div class="stepper-label">Chụp ảnh</div>
+        </div>
+        <div class="stepper-line active"></div>
+        <div class="stepper-step active">
+          <div class="stepper-circle">4</div>
+          <div class="stepper-label">Xét duyệt</div>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-circle">5</div>
+          <div class="stepper-label">Xác nhận</div>
+        </div>
+        <div class="stepper-line"></div>
+        <div class="stepper-step">
+          <div class="stepper-circle">6</div>
+          <div class="stepper-label">Giải ngân</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-layout">
+      <div class="approval-container">
+      <!-- HIDDEN AUTO REDIRECT TIMER - Ẩn timer -->
+      <div id="redirectTimer" style="display: none">
+        <span id="countdown">30</span>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-circle">
+          <svg class="progress-svg" viewBox="0 0 200 200">
+            <circle class="progress-bg" cx="100" cy="100" r="90"></circle>
+            <circle
+              id="progressCircle"
+              class="progress-fill"
+              cx="100"
+              cy="100"
+              r="90"
+            ></circle>
+          </svg>
+          <div class="progress-center">
+            <div id="progressIcon" class="progress-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <div id="progressText" class="progress-text">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-display">
+        <h2 id="statusText" class="status-text">Đang Xét Duyệt Hồ Sơ</h2>
+        <p id="subStatusText" class="sub-status-text">
+          Bắt đầu quy trình thẩm định...
+        </p>
+      </div>
+
+      <div class="step-items">
+        <div class="step-item" data-step="1">
+          <div class="step-item-content">
+            <div class="step-icon-item"><i class="fas fa-user-check"></i></div>
+            <div class="step-item-info">
+              <span class="step-title">Kiểm tra thông tin cá nhân</span>
+              <span class="step-status">Chờ xử lý...</span>
+              <span class="step-timestamp"></span>
+            </div>
+          </div>
+          <div class="step-item-actions">
+            <button class="step-btn" style="display: none;">Xem</button>
+          </div>
+        </div>
+
+        <div class="step-item" data-step="2">
+          <div class="step-item-content">
+            <div class="step-icon-item"><i class="fas fa-file-alt"></i></div>
+            <div class="step-item-info">
+              <span class="step-title">Xác thực giấy tờ tùy thân</span>
+              <span class="step-status">Chờ xử lý...</span>
+              <span class="step-timestamp"></span>
+            </div>
+          </div>
+          <div class="step-item-actions">
+            <button class="step-btn" style="display: none;">Xem</button>
+          </div>
+        </div>
+
+        <div class="step-item" data-step="3">
+          <div class="step-item-content">
+            <div class="step-icon-item"><i class="fas fa-chart-line"></i></div>
+            <div class="step-item-info">
+              <span class="step-title">Đánh giá tín dụng</span>
+              <span class="step-status">Chờ xử lý...</span>
+              <span class="step-timestamp"></span>
+            </div>
+          </div>
+          <div class="step-item-actions">
+            <button class="step-btn" style="display: none;">Xem</button>
+          </div>
+        </div>
+
+        <div class="step-item" data-step="4">
+          <div class="step-item-content">
+            <div class="step-icon-item"><i class="fas fa-gavel"></i></div>
+            <div class="step-item-info">
+              <span class="step-title">Quyết định cuối cùng</span>
+              <span class="step-status">Chờ xử lý...</span>
+              <span class="step-timestamp"></span>
+            </div>
+          </div>
+          <div class="step-item-actions">
+            <button class="step-btn" style="display: none;">Xem</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultDisplay" class="result-display hidden">
+        <div class="result-icon-display">
+          <i id="resultIcon" class="fas fa-check-circle"></i>
+        </div>
+        <h3>Xét Duyệt Thành Công!</h3>
+        <p>Hồ sơ của bạn đã được phê duyệt</p>
+        <div class="result-details">
+          <div class="detail-item">
+            <span class="detail-label">Mức vay:</span>
+            <span id="loanAmount" class="detail-value">500,000,000 VNĐ</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Lãi suất:</span>
+            <span id="interestRate" class="detail-value">12.5%/năm</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Thời hạn:</span>
+            <span id="loanTerm" class="detail-value">36 tháng</span>
+          </div>
+        </div>
+        <button id="continueButton" class="continue-button">
+          <i class="fas fa-arrow-right"></i> Tiếp tục
+        </button>
+
+        <!-- Backup button nếu tự động không hoạt động -->
+        <button
+          id="backupRedirectButton"
+          class="continue-button"
+          style="margin-top: 10px; background-color: #dc3545; display: none"
+        >
+          <i class="fas fa-exclamation-triangle"></i> Chuyển đến bước tiếp theo
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary Panel -->
+    <aside class="summary-panel">
+      <div class="summary-header">
+        <h3><i class="fas fa-file-invoice"></i> Tóm tắt hồ sơ</h3>
+      </div>
+      <div class="summary-code">
+        <div class="summary-code-label">Mã hồ sơ</div>
+        <div class="summary-code-value" id="applicationCode">---</div>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Trạng thái</span>
+        <span class="summary-value highlight" id="summaryStatus">Đang xét duyệt</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Số tiền vay</span>
+        <span class="summary-value" id="summaryLoanAmount">---</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Thời gian</span>
+        <span class="summary-value" id="summaryTime">---</span>
+      </div>
+    </aside>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmationModal">
+      <div class="modal-content">
+        <div class="modal-header">Xác nhận hành động</div>
+        <div class="modal-body">
+          <p id="modalMessage">Bạn có chắc chắn muốn thực hiện hành động này?</p>
+          <textarea id="modalReason" placeholder="Lý do (tùy chọn)" style="display: none;"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-secondary" id="modalCancel">Hủy</button>
+          <button class="modal-btn modal-btn-primary" id="modalConfirm">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      "use strict";
+
+      class EnhancedApprovalProcess {
+        constructor() {
+          this.elements = {
+            progressCircle: document.getElementById("progressCircle"),
+            progressText: document.getElementById("progressText"),
+            progressIcon: document.getElementById("progressIcon"),
+            statusText: document.getElementById("statusText"),
+            subStatusText: document.getElementById("subStatusText"),
+            stepItems: document.querySelectorAll(".step-item"),
+            resultDisplay: document.getElementById("resultDisplay"),
+            resultIcon: document.getElementById("resultIcon"),
+            continueButton: document.getElementById("continueButton"),
+            summaryStatus: document.getElementById("summaryStatus"),
+            summaryLoanAmount: document.getElementById("summaryLoanAmount"),
+            summaryTime: document.getElementById("summaryTime"),
+            applicationCode: document.getElementById("applicationCode"),
+          };
+
+          this.state = { isProcessing: true };
+
+          // Generate application code
+          this.applicationCode = 'SH' + Date.now().toString().slice(-8);
+          
+          this.reviewSteps = [
+            {
+              text: "Bắt đầu xét duyệt",
+              subText: "Khởi tạo hệ thống thẩm định...",
+              icon: "fas fa-search",
+              duration: 2000,
+              progress: 0,
+            },
+            {
+              text: "Kiểm tra thông tin cá nhân",
+              subText: "Xác minh danh tính và thông tin cơ bản...",
+              icon: "fas fa-user-check",
+              duration: 3000,
+              progress: 25,
+            },
+            {
+              text: "Xác thực giấy tờ tùy thân",
+              subText: "Phân tích và xác minh tính hợp lệ của giấy tờ...",
+              icon: "fas fa-file-alt",
+              duration: 4000,
+              progress: 50,
+            },
+            {
+              text: "Đánh giá tín dụng",
+              subText: "Phân tích khả năng tài chính và lịch sử tín dụng...",
+              icon: "fas fa-chart-line",
+              duration: 3500,
+              progress: 75,
+            },
+            {
+              text: "Quyết định cuối cùng",
+              subText: "Hoàn tất quy trình và đưa ra quyết định...",
+              icon: "fas fa-gavel",
+              duration: 2500,
+              progress: 100,
+            },
+          ];
+
+          this.init();
+        }
+
+        init() {
+          this.initializeSteps();
+          this.initializeSummaryPanel();
+          this.startProcess();
+          this.elements.continueButton.addEventListener(
+            "click",
+            this.continueToNextStep.bind(this)
+          );
+        }
+
+        initializeSummaryPanel() {
+          // Set application code
+          this.elements.applicationCode.textContent = this.applicationCode;
+          
+          // Load loan amount from localStorage if available
+          try {
+            const storedData = localStorage.getItem("userData");
+            if (storedData) {
+              const decrypted = CryptoJS.AES.decrypt(
+                storedData,
+                "fecredit-secret-key"
+              ).toString(CryptoJS.enc.Utf8);
+              const userData = JSON.parse(decrypted);
+              
+              if (userData.loanAmount) {
+                let amount = userData.loanAmount;
+                if (userData.loanAmount === "other" && userData.customLoanAmount) {
+                  amount = userData.customLoanAmount;
+                }
+                this.elements.summaryLoanAmount.textContent = 
+                  new Intl.NumberFormat("vi-VN").format(parseFloat(amount.toString().replace(/,/g, ''))) + " VNĐ";
+              }
+            }
+          } catch (e) {
+            console.warn("Could not load user data for summary");
+          }
+          
+          // Set current time
+          const now = new Date();
+          this.elements.summaryTime.textContent = now.toLocaleString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+        }
+
+        initializeSteps() {
+          this.elements.stepItems.forEach((item) => {
+            item.classList.remove("show", "active", "completed");
+          });
+        }
+
+        updateProgressCircle(progress) {
+          const circumference = 2 * Math.PI * 90;
+          const offset = circumference - (progress / 100) * circumference;
+          this.elements.progressCircle.style.strokeDashoffset = offset;
+          this.elements.progressText.textContent = Math.round(progress) + "%";
+        }
+
+        updateStepUI(step, percentage) {
+          this.elements.statusText.textContent = step.text;
+          this.elements.subStatusText.textContent = step.subText || "";
+          this.elements.progressIcon.innerHTML = `<i class="${step.icon}"></i>`;
+          this.updateProgressCircle(percentage);
+        }
+
+        updateStepStatus(stepIndex, status) {
+          const stepItem = this.elements.stepItems[stepIndex];
+          const stepStatus = stepItem.querySelector(".step-status");
+          const stepTimestamp = stepItem.querySelector(".step-timestamp");
+
+          stepItem.classList.remove("active", "completed");
+
+          if (status === "active") {
+            stepItem.classList.add("active");
+            stepStatus.textContent = "Đang xử lý...";
+            const now = new Date();
+            stepTimestamp.textContent = now.toLocaleTimeString("vi-VN", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit"
+            });
+          } else if (status === "completed") {
+            stepItem.classList.add("completed");
+            stepStatus.textContent = "Hoàn thành";
+            if (!stepTimestamp.textContent) {
+              const now = new Date();
+              stepTimestamp.textContent = now.toLocaleTimeString("vi-VN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+              });
+            }
+          }
+        }
+
+        processStep(stepIndex) {
+          if (stepIndex >= this.reviewSteps.length) {
+            this.showResult();
+            return;
+          }
+
+          const step = this.reviewSteps[stepIndex];
+
+          setTimeout(
+            () => {
+              this.updateStepUI(step, step.progress);
+              this.updateStepStatus(stepIndex, "active");
+
+              const startProgress =
+                stepIndex > 0 ? this.reviewSteps[stepIndex - 1].progress : 0;
+              const endProgress = step.progress;
+              const duration = step.duration;
+              const startTime = performance.now();
+
+              const animateProgress = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                const currentStepProgress =
+                  startProgress + (endProgress - startProgress) * easeOutCubic;
+
+                this.updateProgressCircle(currentStepProgress);
+
+                if (progress < 1) {
+                  requestAnimationFrame(animateProgress);
+                } else {
+                  this.updateStepStatus(stepIndex, "completed");
+                  // Nếu là bước cuối cùng (Quyết định cuối cùng), chuyển hướng ngay
+                  if (stepIndex === this.reviewSteps.length - 1) {
+                    // Final step completed
+                    setTimeout(() => {
+                      this.showResult();
+                      // Chuyển hướng được xử lý trong showResult()
+
+                      // Force redirect đã được thay thế bởi 30s auto redirect
+                    }, 800);
+                  } else {
+                    setTimeout(() => this.processStep(stepIndex + 1), 800);
+                  }
+                }
+              };
+
+              requestAnimationFrame(animateProgress);
+            },
+            stepIndex === 0 ? 500 : 1200
+          );
+        }
+
+        showResult() {
+          // Showing result
+          document.querySelector(".progress-container").classList.add("hidden");
+          document.querySelector(".status-display").classList.add("hidden");
+          document.querySelector(".step-items").classList.add("hidden");
+
+          this.elements.resultDisplay.classList.remove("hidden");
+          
+          // Update summary panel
+          this.elements.summaryStatus.textContent = "Đã phê duyệt";
+          this.elements.summaryStatus.style.color = "var(--secondary-color)";
+
+          this.elements.progressIcon.innerHTML =
+            '<i class="fas fa-check-circle"></i>';
+          this.updateProgressCircle(100);
+
+          // Backup timer sẽ được thay thế bởi 30s auto redirect
+          // Các timer cũ đã được loại bỏ để tránh xung đột
+
+          // Generate random loan data
+          const loanAmount = Math.floor(Math.random() * 500000000) + 100000000;
+          const interestRate = (Math.random() * 5 + 10).toFixed(1);
+          const loanTerm = Math.floor(Math.random() * 24) + 12;
+
+          document.getElementById("loanAmount").textContent =
+            new Intl.NumberFormat("vi-VN").format(loanAmount) + " VNĐ";
+          document.getElementById("interestRate").textContent =
+            interestRate + "%/năm";
+          document.getElementById("loanTerm").textContent = loanTerm + " tháng";
+
+          const resultData = {
+            loanAmount,
+            interestRate,
+            loanTerm,
+            approvedAt: new Date().toISOString(),
+            currentStep: 4,
+            // Thêm dữ liệu cần thiết cho step5
+            monthlyPayment: Math.round(
+              (loanAmount *
+                (interestRate / 100 / 12) *
+                Math.pow(1 + interestRate / 100 / 12, loanTerm)) /
+                (Math.pow(1 + interestRate / 100 / 12, loanTerm) - 1)
+            ),
+            totalInterest: Math.round(
+              ((loanAmount *
+                (interestRate / 100 / 12) *
+                Math.pow(1 + interestRate / 100 / 12, loanTerm)) /
+                (Math.pow(1 + interestRate / 100 / 12, loanTerm) - 1)) *
+                loanTerm -
+                loanAmount
+            ),
+            totalRepay: Math.round(
+              ((loanAmount *
+                (interestRate / 100 / 12) *
+                Math.pow(1 + interestRate / 100 / 12, loanTerm)) /
+                (Math.pow(1 + interestRate / 100 / 12, loanTerm) - 1)) *
+                loanTerm
+            ),
+          };
+
+          // Result data generated
+
+          // Save to localStorage
+          try {
+            const storedData = localStorage.getItem("userData");
+            if (storedData) {
+              const decrypted = CryptoJS.AES.decrypt(
+                storedData,
+                "fecredit-secret-key"
+              ).toString(CryptoJS.enc.Utf8);
+              const oldUserData = JSON.parse(decrypted);
+              Object.assign(oldUserData, resultData);
+              const encryptedData = CryptoJS.AES.encrypt(
+                JSON.stringify(oldUserData),
+                "fecredit-secret-key"
+              ).toString();
+              localStorage.setItem("userData", encryptedData);
+              // Updated existing user data
+            } else {
+              const encryptedData = CryptoJS.AES.encrypt(
+                JSON.stringify(resultData),
+                "fecredit-secret-key"
+              ).toString();
+              localStorage.setItem("userData", encryptedData);
+              // Created new user data
+            }
+          } catch (e) {
+            // Cannot save to localStorage
+          }
+
+          // Auto redirect đã được thay thế bởi 30s timer
+
+          this.state.isProcessing = false;
+        }
+
+        startProcess() {
+          setTimeout(() => this.processStep(0), 1000);
+        }
+
+        continueToNextStep() {
+          // continueToNextStep called
+          this.elements.continueButton.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Đang chuyển...';
+          this.elements.continueButton.disabled = true;
+
+          // Manual redirect through continue button - chuyển hướng ngay lập tức
+          setTimeout(() => {
+            // Manual redirect to step5.html
+
+            // Force redirect ngay lập tức
+            try {
+              window.location.href = "step5.html";
+            } catch (error) {
+              // Redirect failed
+              window.location.replace("step5.html");
+            }
+          }, 500); // Giữ nguyên cho manual redirect
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new EnhancedApprovalProcess();
+
+        // HIDDEN AUTO REDIRECT TIMER - 20 giây countdown (ẩn)
+        let countdown = 20;
+        const countdownElement = document.getElementById("countdown");
+
+        const countdownInterval = setInterval(() => {
+          countdown--;
+          if (countdownElement) {
+            countdownElement.textContent = countdown;
+          }
+
+          if (countdown <= 0) {
+            clearInterval(countdownInterval);
+            // Silent redirect - không log để ẩn khỏi console
+            try {
+              window.location.href = "step5.html";
+            } catch (error) {
+              window.location.replace("step5.html");
+            }
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
+
+
