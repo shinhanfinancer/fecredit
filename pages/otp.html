@@ -646,6 +646,25 @@ Hãy trình bày dưới dạng danh sách các gạch đầu dòng, sử dụng
           window.location.href = "Evaluate-conditions.html";
         }
       });
+      
+      // Cleanup interval on page unload to prevent memory leaks
+      window.addEventListener('beforeunload', () => {
+        if (otpInterval) {
+          clearInterval(otpInterval);
+          otpInterval = null;
+        }
+      });
+      
+      // Also cleanup on visibility change (tab switch)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && otpInterval) {
+          clearInterval(otpInterval);
+          otpInterval = null;
+        } else if (!document.hidden && otpCountdown > 0 && otpCountdown < 60) {
+          // Restart timer if page becomes visible and countdown is active
+          startOTPTimer();
+        }
+      });
     </script>
   </body>
 </html>

@@ -2083,12 +2083,27 @@
             return;
           }
 
+          // Throttle drawing to 30fps instead of 60fps for better performance
+          const now = performance.now();
+          const elapsed = now - (this.state.lastDrawTime || 0);
+          const targetFPS = 30;
+          const frameInterval = 1000 / targetFPS;
+          
+          if (elapsed < frameInterval) {
+            this.state.animationFrameId = requestAnimationFrame(() =>
+              this.drawVideoToCanvas()
+            );
+            return;
+          }
+          
+          this.state.lastDrawTime = now;
+
           // Clear previous frame
           context.clearRect(0, 0, canvas.width, canvas.height);
 
           // Draw video frame to canvas - fit to canvas maintaining aspect ratio
           try {
-            // Calculate scaling to fit video in canvas
+            // Calculate scaling to fit video in canvas (cache this if video dimensions don't change)
             const videoAspect = video.videoWidth / video.videoHeight;
             const canvasAspect = canvas.width / canvas.height;
 
@@ -2124,29 +2139,23 @@
 
             context.strokeRect(guideX, guideY, guideWidth, guideHeight);
 
-            // Draw corner markers
+            // Draw corner markers - combine paths for better performance
             const cornerSize = 20;
             context.lineWidth = 4;
-            // Top-left
             context.beginPath();
+            // Top-left
             context.moveTo(guideX, guideY + cornerSize);
             context.lineTo(guideX, guideY);
             context.lineTo(guideX + cornerSize, guideY);
-            context.stroke();
             // Top-right
-            context.beginPath();
             context.moveTo(guideX + guideWidth - cornerSize, guideY);
             context.lineTo(guideX + guideWidth, guideY);
             context.lineTo(guideX + guideWidth, guideY + cornerSize);
-            context.stroke();
             // Bottom-left
-            context.beginPath();
             context.moveTo(guideX, guideY + guideHeight - cornerSize);
             context.lineTo(guideX, guideY + guideHeight);
             context.lineTo(guideX + cornerSize, guideY + guideHeight);
-            context.stroke();
             // Bottom-right
-            context.beginPath();
             context.moveTo(
               guideX + guideWidth - cornerSize,
               guideY + guideHeight
@@ -2490,10 +2499,12 @@
             count = 0;
           const data = imageData.data;
           const width = imageData.width;
-          const step = 2;
+          // Increase step size for better performance (4 instead of 2)
+          const step = 4;
           for (let y = 1; y < imageData.height - 1; y += step) {
             for (let x = 1; x < imageData.width - 1; x += step) {
               const idx = (y * width + x) * 4;
+              // Optimize grayscale calculation - precompute indices
               const gray_center =
                 (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
               const idx_left = idx - 4;
@@ -2516,6 +2527,7 @@
               count++;
             }
           }
+          if (count === 0) return 0;
           const mean = sum / count;
           return sumSq / count - mean * mean;
         },
@@ -2535,12 +2547,13 @@
             let sum = 0,
               sumSq = 0,
               count = 0;
-            const step = 2;
+            // Increase step size for better performance (4 instead of 2)
+            const step = 4;
             for (let dy = 0; dy < cornerSize; dy += step) {
               for (let dx = 0; dx < cornerSize; dx += step) {
                 const idx =
                   ((corner.y + dy) * imageData.width + (corner.x + dx)) * 4;
-                if (idx < 0 || idx + 2 >= imageData.data.length) continue; // Sửa lỗi tiềm ẩn: tránh truy cập ngoài mảng
+                if (idx < 0 || idx + 2 >= imageData.data.length) continue;
                 const gray =
                   (imageData.data[idx] +
                     imageData.data[idx + 1] +
@@ -2956,9 +2969,22 @@
         
         /**
          * Real-time face detection to provide user feedback
+         * Throttled to reduce CPU usage
          */
         async detectFaceRealtime() {
           if (!this.state.faceDetectionActive) return;
+          
+          // Throttle face detection to 10fps instead of 60fps for better performance
+          const now = performance.now();
+          const elapsed = now - (this.state.lastFaceDetectionTime || 0);
+          const detectionInterval = 100; // 10fps (1000ms / 10 = 100ms)
+          
+          if (elapsed < detectionInterval) {
+            this.state.faceAnimationFrameId = requestAnimationFrame(() => this.detectFaceRealtime());
+            return;
+          }
+          
+          this.state.lastFaceDetectionTime = now;
           
           const video = this.elements.faceVideo;
           const canvas = this.elements.faceCanvas;
@@ -2967,7 +2993,7 @@
           try {
             // Detect face with TinyFaceDetector (optimized for speed)
             const detectorOptions = new faceapi.TinyFaceDetectorOptions({
-              inputSize: 512,  // Larger input size for better accuracy
+              inputSize: 320,  // Reduced from 512 for better performance
               scoreThreshold: 0.32  // Lower threshold to detect more faces
             });
             

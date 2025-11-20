@@ -374,16 +374,40 @@
             
             if (myChart) myChart.destroy();
             const ctx = document.getElementById('loanChart').getContext('2d');
+            
+            // Decimate data for large datasets to improve chart performance
+            const maxDataPoints = 60; // Show max 60 points on chart
+            let chartSchedule = schedule;
+            if (schedule.length > maxDataPoints) {
+                const step = Math.ceil(schedule.length / maxDataPoints);
+                chartSchedule = schedule.filter((_, index) => index % step === 0 || index === schedule.length - 1);
+            }
+            
             myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: schedule.map(row => `Tháng ${row.month}`),
+                    labels: chartSchedule.map(row => `Tháng ${row.month}`),
                     datasets: [
-                        { label: 'Tiền gốc (VND)', data: schedule.map(row => row.principal), backgroundColor: 'rgba(0, 48, 135, 0.7)'},
-                        { label: 'Tiền lãi (VND)', data: schedule.map(row => row.interest), backgroundColor: 'rgba(242, 140, 56, 0.7)'}
+                        { label: 'Tiền gốc (VND)', data: chartSchedule.map(row => row.principal), backgroundColor: 'rgba(0, 48, 135, 0.7)'},
+                        { label: 'Tiền lãi (VND)', data: chartSchedule.map(row => row.interest), backgroundColor: 'rgba(242, 140, 56, 0.7)'}
                     ]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, ticks: { callback: (value) => value.toLocaleString('vi-VN') + ' VND' } } } }
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    animation: {
+                        duration: 750 // Reduce animation time for better performance
+                    },
+                    scales: { 
+                        x: { stacked: true }, 
+                        y: { 
+                            stacked: true, 
+                            ticks: { 
+                                callback: (value) => value.toLocaleString('vi-VN') + ' VND' 
+                            } 
+                        } 
+                    } 
+                }
             });
         }
         
