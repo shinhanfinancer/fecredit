@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="vi" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2">
+    <meta name="description" content="FE CREDIT tự hào là công ty tài chính dẫn đầu ngành và đang phục vụ hàng triệu người dân Việt Nam qua các sản phẩm và dịch vụ tài chính tiêu dùng uy tín, nhanh chóng.">
+    <meta name="keywords" content="fe credit,vay fe credit,thẻ tín dụng fe,fe online 2.0,cách vay tiền fe,lãi suất vay,giải ngân fe credit">
+    
+    <title>FE CREDIT - VAY TIÊU DÙNG TÍN CHẤP</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/svg+xml" href="https://www-cdn.fecredit.com.vn/media/yienoinl/favicon-feonl-01_width%3D32%26height%3D32.svg">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/fecredit-design-system.css">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+    <link rel="stylesheet" href="assets/css/homepage.css">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FE CREDIT - VAY TIÊU DÙNG TÍN CHẤP">
+    <meta property="og:description" content="FE CREDIT tự hào là công ty tài chính dẫn đầu ngành và đang phục vụ hàng triệu người dân Việt Nam qua các sản phẩm và dịch vụ tài chính tiêu dùng uy tín, nhanh chóng.">
+    <meta property="og:url" content="https://www.fecredit.com.vn/">
+</head>
+<body>
+    <!-- Top Utility Bar -->
+    <div id="site-subheader">
+        <div class="container">
+            <nav class="sub-header-nav">
+                <ul class="sub-header-list">
+                    <li><a href="/ve-chung-toi/">Về chúng tôi</a></li>
+                    <li><a href="https://feonline.fecredit.com.vn/" target="_blank" rel="noopener">Về FE ONLINE 2.0</a></li>
+                    <li><a href="/lien-he/">Liên hệ</a></li>
+                </ul>
+                
+                <div class="site-search-form">
+                    <form action="/search/" method="get">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="search_field" placeholder="Bạn cần tìm gì?" aria-label="Tìm kiếm">
+                        </div>
+                        <button type="submit" class="btn btn-search">
+                            <i class="bi bi-search"></i>
+                            <span>Tìm kiếm</span>
+                        </button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header id="site-header">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <!-- Logo -->
+                <div id="logo">
+                    <a href="/" title="FE CREDIT - VAY TIÊU DÙNG TÍN CHẤP">
+                        <img src="https://www-cdn.fecredit.com.vn/media/20ymppzv/fec-logo.svg" alt="FE CREDIT Logo">
+                        <span>FE CREDIT - VAY TIÊU DÙNG TÍN CHẤP</span>
+                    </a>
+                </div>
+
+                <div class="d-flex align-items-center gap-32">
+                    <!-- Actor Navigation -->
+                    <div class="actor-navigation">
+                        <button class="actor" id="actorDropdown" aria-expanded="false" aria-label="Chọn loại khách hàng">
+                            <span>Tôi là</span>
+                            <span id="current-role">Khách hàng cá nhân</span>
+                            <div class="icon-down">
+                                <i class="bi bi-chevron-down"></i>
+                            </div>
+                        </button>
+                        <div class="dropdown-menu" id="actorMenu">
+                            <a href="/" class="dropdown-item active" data-role="Khách hàng cá nhân">
+                                <div class="actor-icon"><i class="bi bi-person-circle"></i></div>
+                                <span>Khách hàng cá nhân</span>
+                                <div class="check"><i class="bi bi-check"></i></div>
+                            </a>
+                            <a href="/khach-hang-to-chuc/" class="dropdown-item" data-role="Khách hàng tổ chức">
+                                <div class="actor-icon"><i class="bi bi-building"></i></div>
+                                <span>Khách hàng tổ chức</span>
+                                <div class="check"><i class="bi bi-check"></i></div>
+                            </a>
+                            <a href="https://tuyendung.fecredit.com.vn/" class="dropdown-item" data-role="Ứng viên" target="_blank">
+                                <div class="actor-icon"><i class="bi bi-briefcase"></i></div>
+                                <span>Ứng viên</span>
+                                <div class="check"><i class="bi bi-check"></i></div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Main Navigation -->
+                    <nav class="nav__menu" aria-label="Main Navigation">
+                        <ul class="nav__list">
+                            <li class="dropdown__item">
+                                <div class="nav__link" role="button" aria-expanded="false">
+                                    <span>Sản phẩm</span>
+                                    <div class="dropdown__arrow"><i class="bi bi-chevron-down"></i></div>
+                                </div>
+                                <ul class="dropdown__menu level_1">
+                                    <li><a href="/tien-mat-linh-hoat/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-cash-stack"></i></div>
+                                        <span>Tiền mặt linh hoạt</span>
+                                    </a></li>
+                                    <li><a href="/vay-mua-xe-may/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-scooter"></i></div>
+                                        <span>Vay mua xe máy</span>
+                                    </a></li>
+                                    <li><a href="/vay-mua-dien-thoai-dien-may/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-phone"></i></div>
+                                        <span>Vay mua điện thoại - điện máy</span>
+                                    </a></li>
+                                    <li><a href="/the-tin-dung/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-credit-card"></i></div>
+                                        <span>Thẻ tín dụng</span>
+                                    </a></li>
+                                    <li class="dropdown__item">
+                                        <div class="nav__link" role="button" aria-expanded="false">
+                                            <div class="nav__icon"><i class="bi bi-three-dots"></i></div>
+                                            <span>Sản phẩm khác</span>
+                                            <div class="dropdown__arrow"><i class="bi bi-chevron-down"></i></div>
+                                        </div>
+                                        <ul class="dropdown__menu level_2">
+                                            <li><a href="/bao-hiem-lien-ket/" class="nav__link">
+                                                <div class="nav__icon"><i class="bi bi-shield-check"></i></div>
+                                                <span>Bảo hiểm liên kết</span>
+                                            </a></li>
+                                            <li><a href="/mua-truoc-tra-sau/" class="nav__link">
+                                                <div class="nav__icon"><i class="bi bi-cart-check"></i></div>
+                                                <span>Mua trước trả sau</span>
+                                            </a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown__item">
+                                <div class="nav__link" role="button" aria-expanded="false">
+                                    <span>Tin tức & khuyến mại</span>
+                                    <div class="dropdown__arrow"><i class="bi bi-chevron-down"></i></div>
+                                </div>
+                                <ul class="dropdown__menu level_1">
+                                    <li><a href="/tin-tuc-khuyen-mai/tin-tuc/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-newspaper"></i></div>
+                                        <span>Tin tức</span>
+                                    </a></li>
+                                    <li><a href="/tin-tuc-khuyen-mai/khuyen-mai/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-percent"></i></div>
+                                        <span>Khuyến mại</span>
+                                    </a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown__item">
+                                <div class="nav__link" role="button" aria-expanded="false">
+                                    <span>Hỗ trợ khách hàng</span>
+                                    <div class="dropdown__arrow"><i class="bi bi-chevron-down"></i></div>
+                                </div>
+                                <ul class="dropdown__menu level_1">
+                                    <li><a href="/thanh-toan-truc-tuyen/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-credit-card-2-front"></i></div>
+                                        <span>Thanh toán trực tuyến</span>
+                                    </a></li>
+                                    <li><a href="/gui-yeu-cau-va-khieu-nai/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-chat-dots"></i></div>
+                                        <span>Gửi yêu cầu và khiếu nại</span>
+                                    </a></li>
+                                    <li><a href="/tim-diem-thanh-toan-giai-ngan/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-geo-alt"></i></div>
+                                        <span>Tìm điểm thanh toán / Giải ngân</span>
+                                    </a></li>
+                                    <li><a href="/cau-hoi-thuong-gap/" class="nav__link">
+                                        <div class="nav__icon"><i class="bi bi-question-circle"></i></div>
+                                        <span>Câu hỏi thường gặp</span>
+                                    </a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <!-- Account Navigation -->
+                    <div class="account-navigation">
+                        <button id="accountDropdown" aria-expanded="false" aria-label="Tài khoản">
+                            <div id="avatar-initials">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        </button>
+                        <div class="dropdown-menu" id="accountMenu">
+                            <a href="/tai-khoan/" class="dropdown-item">
+                                <div class="actor-icon"><i class="bi bi-person-circle"></i></div>
+                                <span>Thông tin tài khoản</span>
+                            </a>
+                            <div class="divider"></div>
+                            <button type="button" class="button-logout">
+                                <div class="actor-icon"><i class="bi bi-box-arrow-right"></i></div>
+                                <span>Đăng xuất</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Header -->
+    <header id="site-header-mobile">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <div id="logo">
+                    <a href="/" title="FE CREDIT">
+                        <img src="https://www-cdn.fecredit.com.vn/media/20ymppzv/fec-logo.svg" alt="FE CREDIT Logo">
+                        <span>FE CREDIT</span>
+                    </a>
+                </div>
+                <div class="d-flex align-items-center gap-12">
+                    <button class="nav__toggle" id="mobileMenuToggle" aria-expanded="false" aria-label="Menu">
+                        <img src="assets/icons/menu-deep.png" class="nav__burger" alt="Menu">
+                        <img src="assets/icons/close.svg" class="nav__close" alt="Close">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="nav-menu-mobile" id="mobileMenu">
+            <div class="container">
+                <!-- Mobile navigation content will be populated by JavaScript -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="site-content">
+        <!-- Hero Carousel -->
+        <section class="hero-carousel">
+            <div class="carousel-container">
+                <div class="carousel-track" id="heroCarousel">
+                    <!-- Slide 1 -->
+                    <div class="carousel-slide active">
+                        <div class="slide-content">
+                            <div class="container">
+                                <div class="slide-text">
+                                    <h1>FE CREDIT ĐỒNG HÀNH CÙNG NGƯỜI DÂN VÙNG LŨ</h1>
+                                    <p class="slide-subtitle">Giảm đến 50% lãi suất</p>
+                                    <p class="slide-description">Ổn định cuộc sống</p>
+                                    <a href="#" class="btn btn-primary btn-lg">Tìm hiểu ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-bg" style="background: linear-gradient(135deg, #003DA5 0%, #0052D9 100%);"></div>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <div class="container">
+                                <div class="slide-text">
+                                    <h1>NHÂN ĐÔI ƯU ĐÃI XE ĐIỆN VỀ TAY</h1>
+                                    <p class="slide-subtitle">Lãi suất từ 0.46%</p>
+                                    <p class="slide-description">Sắm xe máy điện giá hời</p>
+                                    <a href="#" class="btn btn-primary btn-lg">Tìm hiểu ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-bg" style="background: linear-gradient(135deg, #00994F 0%, #9FE870 100%);"></div>
+                    </div>
+                    
+                    <!-- Slide 3 -->
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <div class="container">
+                                <div class="slide-text">
+                                    <h1>CÓ FLEXI BUY THẢNH THƠI THANH TOÁN</h1>
+                                    <p class="slide-subtitle">Flexi Buy trong tay</p>
+                                    <p class="slide-description">Cuộc sống nhẹ bay</p>
+                                    <a href="#" class="btn btn-primary btn-lg">Tìm hiểu ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-bg" style="background: linear-gradient(135deg, #FF6B00 0%, #FFC107 100%);"></div>
+                    </div>
+                    
+                    <!-- Slide 4 -->
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <div class="container">
+                                <div class="slide-text">
+                                    <h1>TÂN TRANG NHÀ CỬA SẮM SỬA CUỐI NĂM</h1>
+                                    <p class="slide-subtitle">Lãi suất từ 0%</p>
+                                    <p class="slide-description">Trả góp hàng điện máy</p>
+                                    <a href="#" class="btn btn-primary btn-lg">Tìm hiểu thêm</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-bg" style="background: linear-gradient(135deg, #E63946 0%, #FF6B00 100%);"></div>
+                    </div>
+                    
+                    <!-- Slide 5 -->
+                    <div class="carousel-slide">
+                        <div class="slide-content">
+                            <div class="container">
+                                <div class="slide-text">
+                                    <h1>LẦN ĐẦU VAY QUÀ LIỀN TAY</h1>
+                                    <p class="slide-subtitle">Vay gọn nhẹ</p>
+                                    <p class="slide-description">Quà khỏe re</p>
+                                    <a href="#" class="btn btn-primary btn-lg">Tìm hiểu ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-bg" style="background: linear-gradient(135deg, #003DA5 0%, #00994F 100%);"></div>
+                    </div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <button class="carousel-control prev" id="carouselPrev" aria-label="Previous slide">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="carousel-control next" id="carouselNext" aria-label="Next slide">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators" id="carouselIndicators">
+                    <button class="indicator active" data-slide="0" aria-label="Slide 1"></button>
+                    <button class="indicator" data-slide="1" aria-label="Slide 2"></button>
+                    <button class="indicator" data-slide="2" aria-label="Slide 3"></button>
+                    <button class="indicator" data-slide="3" aria-label="Slide 4"></button>
+                    <button class="indicator" data-slide="4" aria-label="Slide 5"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lead Generation Form Section -->
+        <section class="lead-form-section py-48">
+            <div class="container">
+                <div class="lead-form-wrapper">
+                    <div class="form-header text-center mb-32">
+                        <h2>BẠN CẦN HỖ TRỢ TÀI CHÍNH</h2>
+                        <p>Đăng ký ngay để nhận tư vấn miễn phí</p>
+                    </div>
+                    
+                    <form id="leadForm" class="lead-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName" class="form-label">Họ và tên <span class="text-red">*</span></label>
+                                <input type="text" id="fullName" name="fullName" class="form-control" required>
+                                <div class="invalid-feedback">Vui lòng nhập họ và tên</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="citizenId" class="form-label">Số căn cước công dân (12 số) <span class="text-red">*</span></label>
+                                <input type="text" id="citizenId" name="citizenId" class="form-control" pattern="[0-9]{12}" maxlength="12" required>
+                                <div class="invalid-feedback">Vui lòng nhập đúng 12 số</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Số điện thoại <span class="text-red">*</span></label>
+                                <input type="tel" id="phone" name="phone" class="form-control" pattern="[0-9]{10}" maxlength="10" required>
+                                <div class="invalid-feedback">Vui lòng nhập đúng 10 số</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="productType" class="form-label">Bạn đang có nhu cầu <span class="text-red">*</span></label>
+                                <select id="productType" name="productType" class="form-control" required>
+                                    <option value="TIEN_MAT_LINH_HOAT">TIỀN MẶT LINH HOẠT</option>
+                                    <option value="VAY_MUA_XE_MAY">VAY MUA XE MÁY</option>
+                                    <option value="VAY_MUA_DIEN_THOAI">VAY MUA ĐIỆN THOẠI - ĐIỆN MÁY</option>
+                                    <option value="THE_TIN_DUNG">THẺ TÍN DỤNG</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="province" class="form-label">Tỉnh/Thành phố <span class="text-red">*</span></label>
+                                <select id="province" name="province" class="form-control" required>
+                                    <option value="">Chọn tỉnh/thành phố</option>
+                                    <option value="HCM">Hồ Chí Minh</option>
+                                    <option value="HN">Hà Nội</option>
+                                    <option value="DN">Đà Nẵng</option>
+                                    <option value="HP">Hải Phòng</option>
+                                    <option value="CT">Cần Thơ</option>
+                                </select>
+                                <div class="invalid-feedback">Vui lòng chọn tỉnh/thành phố</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input type="checkbox" id="consent13" name="consent13" class="form-check-input" required>
+                            <label for="consent13" class="form-check-label">
+                                Tôi đồng ý với <a href="#" target="_blank">Nghị định 13</a> về bảo vệ dữ liệu cá nhân <span class="text-red">*</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input type="checkbox" id="consent91" name="consent91" class="form-check-input">
+                            <label for="consent91" class="form-check-label">
+                                Tôi đồng ý nhận thông tin khuyến mại từ FE CREDIT
+                            </label>
+                        </div>
+                        
+                        <div class="text-center mt-24">
+                            <button type="submit" class="btn btn-primary btn-lg">ĐĂNG KÝ NGAY!</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Showcase Section -->
+        <section class="product-showcase py-48 bg-gray-light">
+            <div class="container">
+                <div class="section-header text-center mb-32">
+                    <h2>Khám phá sản phẩm</h2>
+                    <p>Giải pháp tài chính phù hợp cho mọi nhu cầu</p>
+                </div>
+                
+                <div class="product-grid">
+                    <!-- Product 1 -->
+                    <div class="product-card card">
+                        <div class="product-icon">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+                        <h3 class="product-title">TIỀN MẶT LINH HOẠT</h3>
+                        <ul class="product-features">
+                            <li><i class="bi bi-check-circle-fill"></i> Hạn mức lên đến 100 triệu VND</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Hồ sơ đơn giản</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Nhận tiền nhanh chóng</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a href="/tien-mat-linh-hoat/" class="btn btn-outline">Tìm hiểu thêm</a>
+                            <a href="pages/loan_registration.html" class="btn btn-primary">Đăng ký</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="product-card card">
+                        <div class="product-icon">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <h3 class="product-title">THẺ TÍN DỤNG</h3>
+                        <ul class="product-features">
+                            <li><i class="bi bi-check-circle-fill"></i> Chi tiêu dễ dàng</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Tích lũy điểm thưởng, hoàn tiền</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Trả góp linh hoạt từ 0%</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Mở thẻ chỉ trong 5 phút</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a href="/the-tin-dung/" class="btn btn-outline">Tìm hiểu thêm</a>
+                            <a href="#" class="btn btn-primary">Đăng ký</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="product-card card">
+                        <div class="product-icon">
+                            <i class="bi bi-scooter"></i>
+                        </div>
+                        <h3 class="product-title">VAY MUA XE MÁY</h3>
+                        <ul class="product-features">
+                            <li><i class="bi bi-check-circle-fill"></i> Trả góp tiện lợi</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Hỗ trợ vay nhanh chóng</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Duyệt vay tại điểm mua xe máy</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Ưu đãi liên tục</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a href="/vay-mua-xe-may/" class="btn btn-outline">Tìm hiểu thêm</a>
+                            <a href="#" class="btn btn-primary">Đăng ký</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 4 -->
+                    <div class="product-card card">
+                        <div class="product-icon">
+                            <i class="bi bi-phone"></i>
+                        </div>
+                        <h3 class="product-title">VAY MUA ĐIỆN THOẠI-ĐIỆN MÁY</h3>
+                        <ul class="product-features">
+                            <li><i class="bi bi-check-circle-fill"></i> Dễ dàng</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Mạng lưới cửa hàng rộng lớn</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Lãi suất hấp dẫn</li>
+                            <li><i class="bi bi-check-circle-fill"></i> Giải ngân ngay tại cửa hàng</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a href="/vay-mua-dien-thoai-dien-may/" class="btn btn-outline">Tìm hiểu thêm</a>
+                            <a href="#" class="btn btn-primary">Đăng ký</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="statistics-section py-48">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">97%</div>
+                        <div class="stat-label">KHÁCH HÀNG</div>
+                        <div class="stat-description">Hài lòng tất cả kênh bán</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">13,500+</div>
+                        <div class="stat-label">MẠNG LƯỚI</div>
+                        <div class="stat-description">Cửa hàng, đối tác</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">724,000+</div>
+                        <div class="stat-label">BẢO HIỂM</div>
+                        <div class="stat-description">Được phát hành</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">2 TRIỆU+</div>
+                        <div class="stat-label">LƯỢT TẢI</div>
+                        <div class="stat-description">Ứng dụng FE ONLINE 2.0</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer CTA -->
+        <section class="footer-cta py-48 bg-primary text-white">
+            <div class="container text-center">
+                <h2 class="mb-24">HIỆN THỰC HÓA HÀNG TRIỆU ƯỚC MƠ</h2>
+                <div class="cta-contacts">
+                    <div class="contact-item">
+                        <div class="contact-label">Dành cho khách hàng mới</div>
+                        <div class="contact-number">028 3551 6868</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-label">Khách hàng vay</div>
+                        <div class="contact-number">1900 6535</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-label">Khách hàng thẻ tín dụng</div>
+                        <div class="contact-number">1900 6939</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="site-footer" class="py-32 bg-gray-light">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>SẢN PHẨM</h4>
+                    <ul>
+                        <li><a href="/tien-mat-linh-hoat/">Tiền mặt linh hoạt</a></li>
+                        <li><a href="/vay-mua-xe-may/">Vay mua xe máy</a></li>
+                        <li><a href="/vay-mua-dien-thoai-dien-may/">Vay mua điện thoại - điện máy</a></li>
+                        <li><a href="/the-tin-dung/">Thẻ tín dụng</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>THƯ VIỆN</h4>
+                    <ul>
+                        <li><a href="/cau-hoi-thuong-gap/">Câu hỏi thường gặp</a></li>
+                        <li><a href="/cam-nang-truc-tuyen/">Cẩm nang trực tuyến</a></li>
+                        <li><a href="/tin-tuc-khuyen-mai/tin-tuc/">Tin tức</a></li>
+                        <li><a href="/tin-tuc-khuyen-mai/khuyen-mai/">Khuyến mại</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>HỖ TRỢ</h4>
+                    <ul>
+                        <li><a href="/thanh-toan-truc-tuyen/">Thanh toán trực tuyến</a></li>
+                        <li><a href="/tim-diem-thanh-toan-giai-ngan/">Điểm thanh toán / Giải ngân</a></li>
+                        <li><a href="/tra-cuu-khong-lam-phien/">Tra cứu không làm phiền</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>KHÁC</h4>
+                    <ul>
+                        <li><a href="/bao-hiem-lien-ket/">Bảo hiểm liên kết</a></li>
+                        <li><a href="/mua-truoc-tra-sau/">Mua trước trả sau</a></li>
+                        <li><a href="/ve-chung-toi/">Về chúng tôi</a></li>
+                        <li><a href="/lien-he/">Liên hệ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom text-center mt-32">
+                <p>&copy; Bản quyền thuộc về FE CREDIT 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Đăng ký thành công!</h3>
+                    <button class="modal-close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="success-icon">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <p>Cảm ơn bạn đã đăng ký. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/carousel.js"></script>
+    <script src="assets/js/form-validation.js"></script>
+</body>
+</html>
